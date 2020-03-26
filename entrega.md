@@ -6,7 +6,7 @@ Talles Siqueira Ceolin - Programação Paralela
 #### 1. Explique como se encontram implementadas as 4 etapas de projeto: particionamento, comunicação, aglomeração, mapeamento (use trechos de código para ilustrar a explicação).
 
 Particionamento:
-
+Os limites das divisões do vetor são definidos e assim é atribuído uma parte para cada thread processar.
 ```c
 33 int wsize = dotdata.wsize;
 34 int start = offset*wsize;
@@ -22,15 +22,18 @@ Particionamento:
 ```
 
 Comunicação:
+A comunicação ocorre no momento do uso do mutex, onde só pode haver uma thread em processamento ao mesmo tempo. Esta soma da linha 46 define a região crítica, logo deve existir este controle e comunicação por parte do mutex.
 ```c
 45  pthread_mutex_lock (&mutexsum);
 46  dotdata.c += mysum;
 47  pthread_mutex_unlock (&mutexsum);
 ```  
 
-Aglomeração:
-
 Mapeamento:
+O mapeamento neste caso é feito pelo usuário ao definir o número de threads, o tamanho do vetor e o número de repetições.
+```bash
+    ./pthreads_dotprod <num_threads> <tamanho> <repeticoes>
+```
 
 #### 2. Considerando o tempo (em microssegundos) mostrado na saída do programa, qual foi a aceleração (speedup) com o uso de threads?
 
@@ -67,3 +70,22 @@ Tabela também no arquivo results.csv
 #### 5. Explique as diferenças entre pthreads_dotprod.c e pthreads_dotprod2.c. Com as linhas removidas, o programa está correto?
 
 Embora sejá possível o programa funcionar da mesma maneira, sem a implementação dos *mutex* existe o risco de haver interferência entre as threads ou uma possível parada na execução.
+
+## Questões 
+
+#### Implemente um programa equivalente a pthreads_dotprod.c usando OpenMP.
+
+O programa está localizado no arquivo "pthreads_dotprod_omp.c"
+
+#### Avalie o desempenho do programa em OpenMP, usando os mesmos dados/argumentos do programa com threads POSIX.
+
+|  Método  | Threads | Tamanho | Repetições | Tempo (µsec) |
+|:--------:|:-------:|:-------:|:----------:|:------------:|
+| PThreads |    1    | 1000000 |    2000    |    6220936   |
+| PThreads |    2    | 500000  |    2000    |    3257126   |
+| PThreads |    4    | 250000  |    5000    |    6241371   |
+| PThreads |    8    | 1250000 |    5000    |    6211127   |
+|  OpenMP  |    1    | 1000000 |    2000    |    6231171   |
+|  OpenMP  |    2    | 500000  |    2000    |    3230395   |
+|  OpenMP  |    4    | 250000  |    5000    |    5925705   |
+|  OpenMP  |    8    | 125000  |    5000    |    5899544   |

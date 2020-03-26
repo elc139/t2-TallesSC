@@ -1,0 +1,4 @@
+Ubuntu 16.04 LTS
+Memory 15,6 Gb
+Processador Intel Core i7-6500U CPU @ 2.50GHz x 4
+Graphics Intel HD Graphics 520 (Skylake GT2)
